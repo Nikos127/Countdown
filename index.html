@@ -3,66 +3,94 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Multi-Countdown – Monate · Tage · Stunden · Sekunden</title>
+  <title>Multi‑Countdown – Monate · Tage · Stunden · Sekunden</title>
+
+  <!-- PWA / Icons -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="icon" type="image/png" sizes="32x32" href="Icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="Icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="Icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
     :root{
-      --accent: #facc15; /* Gelb */
-      --accent-2: #60a5fa; /* Blau */
+      --bg: #0f172a;          /* sehr dunkel */
+      --panel: #0b1220;       /* Kartenhintergrund */
+      --line: #334155;        /* Rahmenfarbe */
+      --text: #eaf2ff;        /* Haupttext – SEHR hell */
+      --sub:  #cfe0ff;        /* Sekundärtext – hell */
+      --accent: #facc15;      /* Gelb */
+      --accent-2: #60a5fa;    /* Blau */
+      --danger: #f87171;      /* Rot für Weihnachten-Default */
     }
-    body { background: #0f172a; color: #e2e8f0; }
-    .card { background: #111827; border: 1px solid #1f2937; overflow:hidden; }
 
+    body { background: var(--bg); color: var(--text); }
+
+    /* Kopfzeile */
     .app-title{ 
-      font-weight: 800; 
+      font-weight: 900; 
       letter-spacing: .3px; 
-      color: #f8fafc; 
-      text-shadow: 0 2px 10px rgba(250, 204, 21, .25), 0 1px 0 #000; 
+      color: #ffffff; 
+      text-shadow: 0 3px 16px rgba(250, 204, 21, .35), 0 1px 0 #000; 
     }
+    #localTime { color: var(--accent); font-weight: 800; text-shadow: 0 0 10px rgba(250,204,21,.45); }
 
-    #localTime { color: var(--accent); font-weight: 700; text-shadow: 0 0 8px rgba(250,204,21,.35); }
+    /* Karten & Gitter */
+    .card { background: var(--panel); border: 1px solid var(--line); overflow:hidden; }
+    .card .card-body strong.event-title{ color:#fff; font-weight:900; letter-spacing:.2px; }
+    .muted { color: var(--sub); }
 
-    /* Countdown-Zahlen etwas kleiner + kein Umbruch */
-    .count-badge { 
-      font-variant-numeric: tabular-nums; 
-      font-weight: 800; 
-      font-size: clamp(1.6rem, 3.2vw, 2.2rem);
-      line-height: 1; 
-      color: #f8fafc; 
-      text-shadow: 0 0 10px rgba(96,165,250,.35), 0 0 2px rgba(0,0,0,.9);
-      white-space: nowrap;
-    }
-
-    /* Grid passt sich automatisch an – breitere Kästchen, kein Overflow */
     .timegrid { 
       display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
       gap: 1rem; 
     }
     .timegrid > div{ 
-      border-color:#334155 !important; 
-      background:#0b1220; 
+      border-color: var(--line) !important; 
+      background: #09101d; 
       padding: 1rem; 
-      overflow:hidden; 
+      border-radius: .5rem; 
     }
-    .timegrid .muted{ color:#cbd5e1; font-weight:600; white-space:nowrap; }
 
-    .form-label{ color:#e5e7eb; font-weight:700; letter-spacing:.2px; }
-    .form-control{ background:#0b1220; border-color:#334155; color:#e5e7eb; font-weight:700; }
-    .form-control::placeholder{ color:#94a3b8; opacity:.9; }
+    /* Countdown-Zahlen – hell & kontrastreich */
+    .count-badge { 
+      font-variant-numeric: tabular-nums; 
+      font-weight: 900; 
+      font-size: clamp(1.7rem, 4.2vw, 2.6rem);
+      line-height: 1; 
+      color: #ffffff; 
+      text-shadow: 0 0 14px rgba(96,165,250,.45), 0 0 2px rgba(0,0,0,.9);
+      white-space: nowrap;
+    }
+    .unit-label{ color:#e6edff; font-weight:700; text-transform:none; letter-spacing:.2px; }
+
+    /* Formular – starke Lesbarkeit */
+    .form-label{ color:#eaf2ff; font-weight:800; letter-spacing:.2px; }
+    .form-control{ background:#0b1220; border-color:#4b5a75; color:#ffffff; font-weight:700; }
+    .form-control::placeholder{ color:#b9c7e6; }
     .form-control:focus{ background:#0b1220; color:#fff; border-color: var(--accent); box-shadow: 0 0 0 .25rem rgba(250,204,21,.25); }
+    .btn-primary{ background: var(--accent-2); border-color: var(--accent-2); font-weight:800; }
+    .btn-primary:hover{ filter: brightness(1.08); }
+    .badge.color-dot{ display:inline-block; width:.9rem; height:.9rem; border-radius:999px; border:1px solid #0003; }
 
-    .btn-primary{ background: var(--accent-2); border-color: var(--accent-2); font-weight:700; }
-    .btn-primary:hover{ filter: brightness(1.05); }
+    /* Fußnote (Hinweiszeile) – deutlich sichtbar */
+    .hint{ 
+      color:#ffffff; 
+      background: linear-gradient(90deg, rgba(96,165,250,.12), rgba(250,204,21,.12));
+      border:1px dashed #5b6b86; 
+      padding:.75rem 1rem; 
+      border-radius:.5rem; 
+      font-weight:700;
+    }
+    .hint .mono{ font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
 
-    .muted { color: #94a3b8; }
-
-    /* Responsive Feinschliff */
     @media (max-width: 768px){
-      .count-badge{ font-size: clamp(1.5rem, 5vw, 2rem); }
+      .count-badge{ font-size: clamp(1.6rem, 6vw, 2.2rem); }
     }
   </style>
 </head>
@@ -73,51 +101,57 @@
       <span id="localTime"></span>
     </div>
 
-    <!-- Add Event Form -->
+    <!-- Formular: Termin hinzufügen -->
     <div class="card mb-4">
       <div class="card-body">
         <form id="addForm" class="row gy-3 gx-3 align-items-end">
-          <div class="col-12 col-md-4">
+          <div class="col-12 col-md-5">
             <label class="form-label">Titel</label>
-            <input required type="text" id="title" class="form-control" placeholder="z. B. Urlaub" />
+            <input required type="text" id="title" class="form-control" placeholder="z. B. Weihnachten, Urlaub, Geburtstag" />
           </div>
-          <div class="col-12 col-md-4">
+          <div class="col-12 col-md-5">
             <label class="form-label">Datum &amp; Uhrzeit</label>
             <input required type="datetime-local" id="dt" class="form-control" />
           </div>
-          <div class="col-6 col-md-2">
+          <div class="col-6 col-md-1">
             <label class="form-label">Farbe</label>
             <input type="color" id="color" class="form-control form-control-color" value="#60a5fa" />
           </div>
-          <div class="col-6 col-md-2 d-grid">
-            <button class="btn btn-primary" type="submit">Termin hinzufügen</button>
+          <div class="col-6 col-md-1 d-grid">
+            <button class="btn btn-primary" type="submit">Hinzufügen</button>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- Countdown List -->
+    <!-- Liste der Countdowns -->
     <div id="list" class="row g-3"></div>
 
-    <p class="mt-4 small muted">
-      Hinweis: „Monate“ werden als volle Kalendermonate berechnet (kein fixer 30‑Tage‑Monat). Danach folgen Resttage, Stunden, Minuten, Sekunden.
+    <!-- Deutliche Fußnote/Hinweis -->
+    <p class="mt-4 hint">
+      Hinweis: <strong>Monate</strong> werden als <strong>volle Kalendermonate</strong> berechnet (kein fixer 30‑Tage‑Monat). Danach folgen <span class="mono">Resttage · Stunden · Minuten · Sekunden</span>.
     </p>
   </div>
 
   <script>
+    // ——— Utilities ———
     function pad(n){ return n.toString().padStart(2, '0'); }
 
+    // Vollmonate + Rest-Komponenten kalendergenau
     function diffComponents(from, to){
       if (to < from){ return { past: true, months:0, days:0, hours:0, minutes:0, seconds:0 }; }
+      // Clone (Mutation vermeiden)
       let a = new Date(from.getFullYear(), from.getMonth(), from.getDate(), from.getHours(), from.getMinutes(), from.getSeconds());
       const target = to;
 
+      // ganze Kalendermonate zählen
       let months = 0;
       while (true){
         const next = new Date(a.getFullYear(), a.getMonth()+1, a.getDate(), a.getHours(), a.getMinutes(), a.getSeconds());
         if (next <= target){ a = next; months++; } else { break; }
       }
 
+      // Rest in d/h/m/s
       let ms = target - a;
       const sec = 1000, min = 60*sec, hr = 60*min, day = 24*hr;
       const days = Math.floor(ms / day); ms -= days * day;
@@ -132,10 +166,14 @@
       return dt.toLocaleString('de-DE', { dateStyle: 'full', timeStyle: 'short' });
     }
 
+    // ——— Storage (localStorage) ———
     const KEY = 'multiCountdown.events.v1';
-    function loadEvents(){ try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } }
+    function loadEvents(){
+      try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; }
+    }
     function saveEvents(evts){ localStorage.setItem(KEY, JSON.stringify(evts)); }
 
+    // ——— Rendering ———
     const listEl = document.getElementById('list');
 
     function makeCard(evt, idx){
@@ -151,9 +189,9 @@
       const head = document.createElement('div');
       head.className = 'd-flex justify-content-between align-items-center mb-2';
       head.innerHTML = `
-        <div>
-          <span class="badge me-2" style="background:${evt.color||'#60a5fa'}">&nbsp;</span>
-          <strong>${evt.title}</strong>
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge color-dot" style="background:${evt.color||'#60a5fa'}"></span>
+          <strong class="event-title">${evt.title}</strong>
         </div>
         <button class="btn btn-sm btn-outline-danger" data-action="del" data-idx="${idx}">Löschen</button>
       `;
@@ -165,25 +203,25 @@
       const grid = document.createElement('div');
       grid.className = 'timegrid';
       grid.innerHTML = `
-        <div class="text-center p-3 border rounded">
-          <div class="count-badge m-0" data-k="months">—</div>
-          <div class="muted">Monate</div>
+        <div class="text-center border rounded">
+          <div class="count-badge" data-k="months">—</div>
+          <div class="unit-label">Monate</div>
         </div>
-        <div class="text-center p-3 border rounded">
-          <div class="count-badge m-0" data-k="days">—</div>
-          <div class="muted">Tage</div>
+        <div class="text-center border rounded">
+          <div class="count-badge" data-k="days">—</div>
+          <div class="unit-label">Tage</div>
         </div>
-        <div class="text-center p-3 border rounded">
-          <div class="count-badge m-0" data-k="hours">—</div>
-          <div class="muted">Stunden</div>
+        <div class="text-center border rounded">
+          <div class="count-badge" data-k="hours">—</div>
+          <div class="unit-label">Stunden</div>
         </div>
-        <div class="text-center p-3 border rounded">
-          <div class="count-badge m-0" data-k="minutes">—</div>
-          <div class="muted">Minuten</div>
+        <div class="text-center border rounded">
+          <div class="count-badge" data-k="minutes">—</div>
+          <div class="unit-label">Minuten</div>
         </div>
-        <div class="text-center p-3 border rounded">
-          <div class="count-badge m-0" data-k="seconds">—</div>
-          <div class="muted">Sekunden</div>
+        <div class="text-center border rounded">
+          <div class="count-badge" data-k="seconds">—</div>
+          <div class="unit-label">Sekunden</div>
         </div>`;
 
       const status = document.createElement('div');
@@ -194,6 +232,7 @@
       card.appendChild(body);
       col.appendChild(card);
 
+      // Knoten für Update-Loop merken
       col._nodes = {
         months: grid.querySelector('[data-k="months"]'),
         days: grid.querySelector('[data-k="days"]'),
@@ -219,6 +258,7 @@
       evts.forEach((evt, idx) => listEl.appendChild(makeCard(evt, idx)));
     }
 
+    // ——— Live Update ———
     function tick(){
       const now = new Date();
       document.getElementById('localTime').textContent = 'Lokal: ' + germanDateTime(now);
@@ -247,6 +287,7 @@
 
     setInterval(tick, 1000);
 
+    // ——— Handlers ———
     document.getElementById('addForm').addEventListener('submit', (e)=>{
       e.preventDefault();
       const title = document.getElementById('title').value.trim();
@@ -274,17 +315,25 @@
       render();
     });
 
+    // ——— Bootstrap: Weihnachten vorausfüllen ———
     (function seed(){
       const evts = loadEvents();
       if (evts.length) { render(); tick(); return; }
       const now = new Date();
-      const year = now.getMonth() > 11 || (now.getMonth() === 11 && now.getDate() > 25) ? now.getFullYear()+1 : now.getFullYear();
-      const christmas = new Date(year, 11, 25, 0, 0, 0);
+      const year = (now.getMonth() > 11 || (now.getMonth() === 11 && now.getDate() > 25)) ? now.getFullYear()+1 : now.getFullYear();
+      const christmas = new Date(year, 11, 25, 0, 0, 0); // 25.12. yyyy 00:00
       evts.push({ title: 'Weihnachten', when: christmas.toISOString(), color: '#f87171' });
       saveEvents(evts);
       render();
       tick();
     })();
+
+    // ——— Service Worker registrieren (PWA) ———
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').catch(console.error);
+      });
+    }
   </script>
 </body>
 </html>
